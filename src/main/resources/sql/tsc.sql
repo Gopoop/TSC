@@ -11,23 +11,34 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 16/07/2019 18:49:31
+ Date: 16/07/2019 19:04:29
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
--- Table structure for extract_config
+-- Table structure for page_process
 -- ----------------------------
-DROP TABLE IF EXISTS `extract_config`;
-CREATE TABLE `extract_config`  (
+DROP TABLE IF EXISTS `page_process`;
+CREATE TABLE `page_process`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `from` smallint(1) NOT NULL COMMENT '提取来源  1url 2html 3 css',
   `rule` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '提取规则',
   `attribute` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '属性名称',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '属性提取配置' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for pipeline
+-- ----------------------------
+DROP TABLE IF EXISTS `pipeline`;
+CREATE TABLE `pipeline`  (
+  `id` int(11) NOT NULL,
+  `insert_sql` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `table_sql` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '存储配置' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for site
@@ -58,6 +69,10 @@ CREATE TABLE `spider`  (
   `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '名称',
   `thread` smallint(1) NOT NULL DEFAULT 5 COMMENT '线程数 默认5',
   `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '初始的URL',
+  `test_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '测试网页',
+  `start_type` smallint(1) NOT NULL DEFAULT 1 COMMENT '启动类型  1 同步启动 2异步启动',
+  `create_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0),
+  `update_time` timestamp(0) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
