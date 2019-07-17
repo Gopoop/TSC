@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : localhost
+ Source Server         : 本地
  Source Server Type    : MySQL
- Source Server Version : 50724
- Source Host           : localhost:3307
+ Source Server Version : 50726
+ Source Host           : localhost:3306
  Source Schema         : tsc
 
  Target Server Type    : MySQL
- Target Server Version : 50724
+ Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 16/07/2019 23:14:45
+ Date: 17/07/2019 18:55:05
 */
 
 SET NAMES utf8mb4;
@@ -26,9 +26,11 @@ CREATE TABLE `page_process`  (
   `spider_id` int(11) NULL DEFAULT NULL COMMENT '爬虫id',
   `rule` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '提取规则   策略列表  json存储',
   `attribute` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '属性名称',
-  `field` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '持久化字段名',
+  `field_en` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '持久化字段名',
+  `field_cn` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '字段中文名,用户界面展示',
   `field_length` smallint(6) NOT NULL DEFAULT 0 COMMENT '字段长度',
   `field_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '字段类型',
+  `field_is_show` smallint(255) NOT NULL DEFAULT 1 COMMENT '字段是否展示',
   `skip_condition` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '页面跳过规则   策略列表  json存储',
   `target_requests_regex` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '后续抓取url',
   `create_time` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0),
@@ -80,10 +82,23 @@ CREATE TABLE `spider`  (
   `thread` smallint(1) NOT NULL DEFAULT 5 COMMENT '线程数 默认5',
   `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '初始的URL',
   `test_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '测试网页',
+  `data_source` smallint(1) NOT NULL DEFAULT 1 COMMENT '数据来源  1 html 2 ajax',
   `start_type` smallint(1) NOT NULL DEFAULT 1 COMMENT '启动类型  1 同步启动 2异步启动',
   `persist_pattern` smallint(1) NOT NULL DEFAULT 1 COMMENT '持久化方式  1 mysql 2 json文件',
+  `stat` smallint(1) NOT NULL COMMENT '状态  0 初始化 1 运行中 2停止',
   `create_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0),
   `update_time` timestamp(0) NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for spider_log
+-- ----------------------------
+DROP TABLE IF EXISTS `spider_log`;
+CREATE TABLE `spider_log`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `spider_id` int(11) NOT NULL,
+  `start_time` timestamp(0) NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP(0),
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
