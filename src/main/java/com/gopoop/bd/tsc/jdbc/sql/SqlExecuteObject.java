@@ -3,8 +3,8 @@ package com.gopoop.bd.tsc.jdbc.sql;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.gopoop.bd.tsc.common.constants.SQLContants;
+import com.gopoop.bd.tsc.common.utils.StringUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +67,7 @@ public class SqlExecuteObject {
 
 
         public SqlExecuteObject.SqlExecuteObjectBuilder tableName(String tableName) {
-            if(!tableName.contains(SQLContants.UNDERLINE)){
+            if(!tableName.contains(StringUtils.UNDERLINE)){
                 this.tableName = StrUtil.toUnderlineCase(tableName);
             }
             if(this.tableName.endsWith(SQLContants.UNDERLINE_ENTITY)){
@@ -89,9 +89,9 @@ public class SqlExecuteObject {
                     continue;
                 }
                 if(stringObjectEntry.getValue() instanceof String){
-                    fieldValueMap.put(stringObjectEntry.getKey(),SQLContants.SINGLE_QUOTES + stringObjectEntry.getValue() + SQLContants.SINGLE_QUOTES);
+                    fieldValueMap.put(stringObjectEntry.getKey(), StringUtils.surround(String.valueOf(stringObjectEntry.getValue()),StringUtils.SINGLE_QUOTES));
                 }else{
-                    fieldValueMap.put(stringObjectEntry.getKey(),stringObjectEntry.getValue() != null ? stringObjectEntry.getValue() : SQLContants.NULL);
+                    fieldValueMap.put(stringObjectEntry.getKey(),stringObjectEntry.getValue() != null ? stringObjectEntry.getValue() : StringUtils.NULL);
                 }
             }
             return this;

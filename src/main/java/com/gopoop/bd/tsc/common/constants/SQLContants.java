@@ -7,10 +7,6 @@ package com.gopoop.bd.tsc.common.constants;
 public interface SQLContants {
 
     String INSERT_INTO = "insert into ";
-
     String ID = "id";
-    String NULL = "NULL";
-    String UNDERLINE = "_";
-    String SINGLE_QUOTES = "'";
     String UNDERLINE_ENTITY = "_entity";
 }
