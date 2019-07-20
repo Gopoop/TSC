@@ -4,6 +4,7 @@ import cn.hutool.core.util.ClassUtil;
 import com.gopoop.bd.tsc.entity.PageProcessEntity;
 import com.gopoop.bd.tsc.jdbc.sql.SqlExecuteObject;
 import com.gopoop.bd.tsc.service.JdbcService;
+import com.gopoop.bd.tsc.vo.ResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -17,8 +18,8 @@ public abstract class BaseController<T> {
     private JdbcService jdbcService;
 
     @RequestMapping("/create")
-    public String create(T entity){
-        jdbcService.insert(SqlExecuteObject.builder().fieldValueMap(entity).tableName(ClassUtil.getClass(entity).getSimpleName()).build());
-        return "success";
+    public ResponseVo<Integer> create(T entity){
+        int id = jdbcService.insert(SqlExecuteObject.builder().fieldValueMap(entity).tableName(ClassUtil.getClass(entity).getSimpleName()).build());
+        return ResponseVo.successResp(id);
     }
 }
