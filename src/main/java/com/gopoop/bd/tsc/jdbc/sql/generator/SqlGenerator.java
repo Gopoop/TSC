@@ -9,6 +9,6 @@ import com.gopoop.bd.tsc.jdbc.sql.SqlExecuteObject;
  */
 public interface SqlGenerator {
 
-    String generate(SqlExecuteObject sqlExecuteObject);
+    String generate();
 
 }

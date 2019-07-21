@@ -1,8 +1,9 @@
 package com.gopoop.bd.tsc.jdbc.sql;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
-import com.gopoop.bd.tsc.common.constants.SQLContants;
+import com.gopoop.bd.tsc.common.utils.SqlUtil;
 import com.gopoop.bd.tsc.common.utils.StringUtils;
 import lombok.Data;
 
@@ -32,6 +33,8 @@ public class SqlExecuteObject {
      * 字段定义
      */
     private List<Field> fields;
+
+
 
     public SqlExecuteObject() {
     }
@@ -70,8 +73,8 @@ public class SqlExecuteObject {
             if(!tableName.contains(StringUtils.UNDERLINE)){
                 this.tableName = StrUtil.toUnderlineCase(tableName);
             }
-            if(this.tableName.endsWith(SQLContants.UNDERLINE_ENTITY)){
-                this.tableName = this.tableName.replace(SQLContants.UNDERLINE_ENTITY, StringUtils.EMPTY);
+            if(this.tableName.endsWith(SqlUtil.UNDERLINE_ENTITY)){
+                this.tableName = this.tableName.replace(SqlUtil.UNDERLINE_ENTITY, StringUtils.EMPTY);
             }
             return this;
         }
@@ -83,14 +86,16 @@ public class SqlExecuteObject {
             }else {
                 temp = BeanUtil.beanToMap(object,Boolean.TRUE,Boolean.FALSE);
             }
+            if((int)temp.get(SqlUtil.ID) != 0){
+                temp.put(SqlUtil.UPDATE_TIME, DateUtil.now());
+            }else{
+                temp.put(SqlUtil.CREATE_TIME, DateUtil.now());
+            }
             this.fieldValueMap = new HashMap<>();
             for (Map.Entry<String, Object> stringObjectEntry : temp.entrySet()) {
-                if(stringObjectEntry.getKey().equals(SQLContants.ID)){
-                    continue;
-                }
                 if(stringObjectEntry.getValue() instanceof String){
                     fieldValueMap.put(stringObjectEntry.getKey(), StringUtils.surround(String.valueOf(stringObjectEntry.getValue()),StringUtils.SINGLE_QUOTES));
-                }else{
+                } else{
                     fieldValueMap.put(stringObjectEntry.getKey(),stringObjectEntry.getValue() != null ? stringObjectEntry.getValue() : StringUtils.NULL);
                 }
             }
@@ -98,6 +103,7 @@ public class SqlExecuteObject {
         }
 
         public SqlExecuteObject.SqlExecuteObjectBuilder whereConditionMap(Map<String,Object> whereConditionMap) {
+
             this.whereConditionMap = whereConditionMap;
             return this;
         }

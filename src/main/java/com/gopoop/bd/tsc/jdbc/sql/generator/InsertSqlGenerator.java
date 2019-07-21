@@ -1,7 +1,7 @@
 package com.gopoop.bd.tsc.jdbc.sql.generator;
 
-import com.gopoop.bd.tsc.common.constants.SQLContants;
-import com.gopoop.bd.tsc.entity.PageProcessEntity;
+import cn.hutool.core.date.DateUtil;
+import com.gopoop.bd.tsc.common.utils.SqlUtil;
 import com.gopoop.bd.tsc.jdbc.sql.SqlExecuteObject;
 import org.apache.commons.lang3.StringUtils;
 
@@ -13,20 +13,25 @@ import java.util.*;
  */
 public class InsertSqlGenerator extends AbstractSqlGenerator{
 
+    private SqlExecuteObject sqlExecuteObject;
+
+    public InsertSqlGenerator(SqlExecuteObject sqlExecuteObject) {
+        this.sqlExecuteObject = sqlExecuteObject;
+    }
+
 
     @Override
-    public String getMainSql(SqlExecuteObject sqlExecuteObject) {
-
+    public String getMainSql() {
         List<String> fields = new LinkedList<>();
         List<Object> values = new LinkedList<>();
         for (Map.Entry<String, Object> stringObjectEntry : sqlExecuteObject.getFieldValueMap().entrySet()) {
-            if(stringObjectEntry.getKey().equals(SQLContants.ID)){
+            if(stringObjectEntry.getKey().equals(SqlUtil.ID)){
                 continue;
             }
             fields.add(stringObjectEntry.getKey());
             values.add(stringObjectEntry.getValue());
         }
-        StringBuffer sql = new StringBuffer(SQLContants.INSERT_INTO);
+        StringBuffer sql = new StringBuffer(SqlUtil.INSERT_INTO);
         sql.append(sqlExecuteObject.getTableName() + "(");
         sql.append(StringUtils.join(fields,","));
         sql.append(") values (");
@@ -36,7 +41,7 @@ public class InsertSqlGenerator extends AbstractSqlGenerator{
     }
 
     @Override
-    public String getParamSql(SqlExecuteObject sqlExecuteObject) {
+    public String getParamSql() {
         return StringUtils.EMPTY;
     }
 

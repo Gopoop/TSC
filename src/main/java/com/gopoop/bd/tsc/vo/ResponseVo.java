@@ -23,6 +23,10 @@ public class ResponseVo<T> {
         return ResponseVo.builder().data(data).message("请求处理成功").code(0).build();
     }
 
+    public static ResponseVo successResp(){
+        return ResponseVo.builder().message("请求处理成功").code(0).build();
+    }
+
     public static ResponseVo failResp(String msg){
         return ResponseVo.builder().message(msg).code(1).build();
     }

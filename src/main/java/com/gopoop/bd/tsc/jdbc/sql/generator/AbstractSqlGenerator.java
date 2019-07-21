@@ -11,12 +11,12 @@ public abstract class AbstractSqlGenerator implements SqlGenerator{
 
 
 
-    protected abstract String getMainSql(SqlExecuteObject sqlExecuteObject);
+    protected abstract String getMainSql();
 
-    protected abstract String getParamSql(SqlExecuteObject sqlExecuteObject);
+    protected abstract String getParamSql();
 
     @Override
-    public String generate(SqlExecuteObject sqlExecuteObject) {
-        return this.getMainSql(sqlExecuteObject) + this.getParamSql(sqlExecuteObject);
+    public String generate() {
+        return this.getMainSql() + this.getParamSql();
     }
 }

@@ -4,6 +4,7 @@ import com.gopoop.bd.tsc.common.utils.StringUtils;
 import com.gopoop.bd.tsc.jdbc.sql.SqlExecuteObject;
 import com.gopoop.bd.tsc.jdbc.sql.generator.InsertSqlGenerator;
 import com.gopoop.bd.tsc.jdbc.sql.generator.SqlGenerator;
+import com.gopoop.bd.tsc.jdbc.sql.generator.UpdateSqlGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -32,9 +33,9 @@ public class JdbcService {
 
 
     public int insert(SqlExecuteObject executeObject){
-        SqlGenerator generator = new InsertSqlGenerator();
+        SqlGenerator generator = new InsertSqlGenerator(executeObject);
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String insertSql = generator.generate(executeObject);
+        String insertSql = generator.generate();
         jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
@@ -42,6 +43,13 @@ public class JdbcService {
             }
         },keyHolder);
         return keyHolder.getKey().intValue();
+    }
+
+
+    public int update(SqlExecuteObject executeObject){
+        SqlGenerator generator = new UpdateSqlGenerator(executeObject);
+        String updateSql = generator.generate();
+        return jdbcTemplate.update(updateSql);
     }
 
 
