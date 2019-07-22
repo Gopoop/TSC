@@ -44,4 +44,9 @@ public class UpdateSqlGenerator extends AbstractSqlGenerator{
         return StringUtils.EMPTY;
     }
 
+    @Override
+    protected String getLimitSql() {
+        return StringUtils.EMPTY;
+    }
+
 }

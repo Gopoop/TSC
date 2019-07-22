@@ -1,6 +1,7 @@
 package com.gopoop.bd.tsc.common.utils;
 
 import com.gopoop.bd.tsc.jdbc.sql.Condition;
+import com.gopoop.bd.tsc.jdbc.sql.PageParam;
 
 public class SqlUtil {
 
@@ -10,10 +11,11 @@ public class SqlUtil {
     public static final String FROM = " from ";
     public static final String SET = " set  ";
     public static final String WHERE = " where  ";
+    public static final String LIMIT = " limit  ";
+    public static final String OFFSET = " offset  ";
     public static final String AND = " and  ";
     public static final String AS = " as  ";
     public static final String ID = "id";
-    public static final String UNDERLINE_ENTITY = "_entity";
     public static final String CREATE_TIME = "create_time";
     public static final String UPDATE_TIME = "update_time";
 
@@ -52,5 +54,9 @@ public class SqlUtil {
 
     public static final String selectFieldSql(String fieldName,String alias){
         return fieldName + AS + alias + StringUtils.COMMA ;
+    }
+
+    public static String limitSql(PageParam pageParam) {
+        return LIMIT + pageParam.getPageSize() + OFFSET + (pageParam.getPageNow() - 1) * 10;
     }
 }

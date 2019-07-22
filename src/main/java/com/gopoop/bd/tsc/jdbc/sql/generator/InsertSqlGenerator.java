@@ -1,9 +1,8 @@
 package com.gopoop.bd.tsc.jdbc.sql.generator;
 
-import cn.hutool.core.date.DateUtil;
 import com.gopoop.bd.tsc.common.utils.SqlUtil;
+import com.gopoop.bd.tsc.common.utils.StringUtils;
 import com.gopoop.bd.tsc.jdbc.sql.SqlExecuteObject;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
@@ -33,15 +32,20 @@ public class InsertSqlGenerator extends AbstractSqlGenerator{
         }
         StringBuffer sql = new StringBuffer(SqlUtil.INSERT_INTO);
         sql.append(sqlExecuteObject.getTableName() + "(");
-        sql.append(StringUtils.join(fields,","));
+        sql.append(StringUtils.join(",",fields));
         sql.append(") values (");
-        sql.append(StringUtils.join(values,","));
+        sql.append(StringUtils.join(",",values));
         sql.append(")");
         return sql.toString();
     }
 
     @Override
     public String getParamSql() {
+        return StringUtils.EMPTY;
+    }
+
+    @Override
+    protected String getLimitSql() {
         return StringUtils.EMPTY;
     }
 

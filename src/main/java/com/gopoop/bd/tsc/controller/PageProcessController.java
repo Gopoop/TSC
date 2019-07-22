@@ -31,5 +31,10 @@ public class PageProcessController extends BaseController<PageProcessEntity, Pag
 
         return null;
     }
+
+    @Override
+    protected String getTableName() {
+        return "page_process";
+    }
 }
 

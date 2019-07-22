@@ -35,17 +35,22 @@ public class SqlExecuteObject {
      * 字段定义
      */
     private List<Field> fields;
+    /**
+     * 分页参数
+     */
+    private PageParam pageParam;
 
 
 
     public SqlExecuteObject() {
     }
 
-    public SqlExecuteObject(String tableName, Map<String, Object> fieldValueMap, List<Condition> conditions, List<Field> fields) {
+    public SqlExecuteObject(String tableName, Map<String, Object> fieldValueMap, List<Condition> conditions, List<Field> fields,PageParam pageParam) {
         this.tableName = tableName;
         this.fieldValueMap = fieldValueMap;
         this.conditions = conditions;
         this.fields = fields;
+        this.pageParam = pageParam;
     }
 
     public static SqlExecuteObject.SqlExecuteObjectBuilder builder() {
@@ -69,15 +74,14 @@ public class SqlExecuteObject {
          * 字段定义
          */
         private List<Field> fields;
+        /**
+         * 分页参数
+         */
+        private PageParam pageParam;
 
 
         public SqlExecuteObject.SqlExecuteObjectBuilder tableName(String tableName) {
-            if(!tableName.contains(StringUtils.UNDERLINE)){
-                this.tableName = StrUtil.toUnderlineCase(tableName);
-            }
-            if(this.tableName.endsWith(SqlUtil.UNDERLINE_ENTITY)){
-                this.tableName = this.tableName.replace(SqlUtil.UNDERLINE_ENTITY, StringUtils.EMPTY);
-            }
+            this.tableName = tableName;
             return this;
         }
 
@@ -122,9 +126,14 @@ public class SqlExecuteObject {
             return this;
         }
 
+        public SqlExecuteObject.SqlExecuteObjectBuilder pageParam(PageParam pageParam) {
+            this.pageParam = pageParam;
+            return this;
+        }
+
 
         public SqlExecuteObject build() {
-            return new SqlExecuteObject(this.tableName, this.fieldValueMap,this.conditions,this.fields);
+            return new SqlExecuteObject(this.tableName, this.fieldValueMap,this.conditions,this.fields,this.pageParam);
         }
     }
 

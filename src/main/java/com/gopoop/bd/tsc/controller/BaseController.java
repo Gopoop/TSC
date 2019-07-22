@@ -3,6 +3,7 @@ package com.gopoop.bd.tsc.controller;
 import cn.hutool.core.util.ClassUtil;
 import com.gopoop.bd.tsc.entity.PageProcessEntity;
 import com.gopoop.bd.tsc.jdbc.sql.Condition;
+import com.gopoop.bd.tsc.jdbc.sql.PageParam;
 import com.gopoop.bd.tsc.jdbc.sql.SqlExecuteObject;
 import com.gopoop.bd.tsc.service.JdbcService;
 import com.gopoop.bd.tsc.vo.PageBean;
@@ -19,31 +20,39 @@ import java.util.List;
  * @author 郭速凯
  * @date 2019/7/19 17:42
  */
-public abstract class BaseController<Entity,Req,Bean> {
+public abstract class BaseController<Entity,Req extends PageParam,Bean> {
 
     @Autowired
     private JdbcService jdbcService;
 
     protected abstract List<Condition> getCondition(Req req);
 
+    protected abstract String getTableName();
+
 
     @ApiOperation(value = "新增接口",httpMethod = "POST")
     @PostMapping("/create")
     public ResponseVo<Integer> create(@RequestBody  Entity entity){
-        int id = jdbcService.insert(SqlExecuteObject.builder().fieldValueMap(entity).tableName(ClassUtil.getClass(entity).getSimpleName()).build());
+        int id = jdbcService.insert(SqlExecuteObject.builder().fieldValueMap(entity).tableName(this.getTableName()).build());
         return ResponseVo.successResp(id);
     }
 
     @ApiOperation(value = "更新接口",httpMethod = "PUT")
     @PutMapping("/update")
     public ResponseVo<Integer> update(@RequestBody Entity entity){
-        jdbcService.update(SqlExecuteObject.builder().fieldValueMap(entity).tableName(ClassUtil.getClass(entity).getSimpleName()).build());
+        jdbcService.update(SqlExecuteObject.builder().fieldValueMap(entity).tableName(this.getTableName()).build());
         return ResponseVo.successResp();
     }
 
     @ApiOperation(value = "列表获取接口",httpMethod = "POST")
     @PutMapping("/page")
     public ResponseVo<PageBean<Bean>> page(@RequestBody Req req){
-        return ResponseVo.successResp();
+        SqlExecuteObject sqlExecuteObject = SqlExecuteObject.builder()
+                .conditions(this.getCondition(req))
+                .fields(null)
+                .tableName(this.getTableName())
+                .pageParam(PageParam.builder().pageNow(req.getPageNow()).pageSize(req.getPageSize()).build())
+                .build();
+        return ResponseVo.successResp(jdbcService.page(sqlExecuteObject));
     }
 }

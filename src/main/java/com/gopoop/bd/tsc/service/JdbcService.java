@@ -1,8 +1,10 @@
 package com.gopoop.bd.tsc.service;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.gopoop.bd.tsc.common.utils.StringUtils;
 import com.gopoop.bd.tsc.jdbc.sql.SqlExecuteObject;
 import com.gopoop.bd.tsc.jdbc.sql.generator.InsertSqlGenerator;
+import com.gopoop.bd.tsc.jdbc.sql.generator.SelectSqlGenerator;
 import com.gopoop.bd.tsc.jdbc.sql.generator.SqlGenerator;
 import com.gopoop.bd.tsc.jdbc.sql.generator.UpdateSqlGenerator;
 import com.gopoop.bd.tsc.vo.PageBean;
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Service;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author 郭速凯
@@ -49,12 +53,12 @@ public class JdbcService {
 
     public int update(SqlExecuteObject executeObject){
         SqlGenerator generator = new UpdateSqlGenerator(executeObject);
-        String updateSql = generator.generate();
-        return jdbcTemplate.update(updateSql);
+        return jdbcTemplate.update(generator.generate());
     }
 
-    public PageBean page(){
-
+    public List<Map<String, Object>> list(SqlExecuteObject sqlExecuteObject){
+        SqlGenerator generator = new SelectSqlGenerator(sqlExecuteObject);
+        return jdbcTemplate.queryForList(generator.generate());
     }
 
 
