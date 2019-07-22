@@ -5,6 +5,7 @@ import com.gopoop.bd.tsc.jdbc.sql.SqlExecuteObject;
 import com.gopoop.bd.tsc.jdbc.sql.generator.InsertSqlGenerator;
 import com.gopoop.bd.tsc.jdbc.sql.generator.SqlGenerator;
 import com.gopoop.bd.tsc.jdbc.sql.generator.UpdateSqlGenerator;
+import com.gopoop.bd.tsc.vo.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -51,6 +52,11 @@ public class JdbcService {
         String updateSql = generator.generate();
         return jdbcTemplate.update(updateSql);
     }
+
+    public PageBean page(){
+
+    }
+
 
 
 

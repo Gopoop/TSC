@@ -3,6 +3,7 @@ package com.gopoop.bd.tsc.jdbc.sql.generator;
 import cn.hutool.core.date.DateUtil;
 import com.gopoop.bd.tsc.common.utils.SqlUtil;
 import com.gopoop.bd.tsc.common.utils.StringUtils;
+import com.gopoop.bd.tsc.jdbc.sql.Condition;
 import com.gopoop.bd.tsc.jdbc.sql.SqlExecuteObject;
 
 import java.util.Date;
@@ -37,7 +38,7 @@ public class UpdateSqlGenerator extends AbstractSqlGenerator{
     public String getParamSql() {
         for (Map.Entry<String, Object> stringObjectEntry : sqlExecuteObject.getFieldValueMap().entrySet()) {
             if(stringObjectEntry.getKey().equals(SqlUtil.ID)){
-                return SqlUtil.whereSql(stringObjectEntry.getKey(),stringObjectEntry.getValue());
+                return SqlUtil.whereSql(Condition.builder().field(stringObjectEntry.getKey()).value(stringObjectEntry.getValue()).build());
             }
         }
         return StringUtils.EMPTY;

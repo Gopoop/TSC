@@ -3,8 +3,11 @@ package com.gopoop.bd.tsc.jdbc.sql.generator;
 import cn.hutool.core.collection.CollectionUtil;
 import com.gopoop.bd.tsc.common.utils.SqlUtil;
 import com.gopoop.bd.tsc.common.utils.StringUtils;
+import com.gopoop.bd.tsc.jdbc.sql.Condition;
 import com.gopoop.bd.tsc.jdbc.sql.Field;
 import com.gopoop.bd.tsc.jdbc.sql.SqlExecuteObject;
+
+import java.util.Map;
 
 
 /**
@@ -39,8 +42,11 @@ public class SelectSqlGenerator extends AbstractSqlGenerator{
 
     @Override
     public String getParamSql() {
-        if(CollectionUtil.isNotEmpty(sqlExecuteObject.getWhereConditionMap())){
-
+        if(CollectionUtil.isNotEmpty(sqlExecuteObject.getConditions())){
+            StringBuffer whereSql = new StringBuffer(StringUtils.SPACE + "1 = 1 ");
+            for (Condition condition : sqlExecuteObject.getConditions()) {
+                whereSql.append(SqlUtil.whereSql(condition));
+            }
         }
         return StringUtils.EMPTY;
     }

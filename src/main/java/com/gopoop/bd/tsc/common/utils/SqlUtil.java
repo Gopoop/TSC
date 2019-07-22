@@ -1,5 +1,7 @@
 package com.gopoop.bd.tsc.common.utils;
 
+import com.gopoop.bd.tsc.jdbc.sql.Condition;
+
 public class SqlUtil {
 
     public static final String INSERT_INTO = "insert into ";
@@ -16,14 +18,33 @@ public class SqlUtil {
     public static final String UPDATE_TIME = "update_time";
 
 
-    public static final String whereSql(String field,Object value){
-       return WHERE + field + StringUtils.EQUALS + value;
+    public static final String whereSql(Condition condition){
+        String comparator = StringUtils.EQUALS;
+        switch (condition.getCompare()){
+            case GT:
+                comparator = StringUtils.GT;
+                break;
+            case LT:
+                comparator = StringUtils.LT;
+                break;
+            case GR_EQUALS:
+                comparator = StringUtils.GT_EQUALS;
+                break;
+            case LT_EQUALS:
+                comparator = StringUtils.LT_EQUALS;
+                break;
+            case LIKE:
+                comparator = StringUtils.LIKE;
+                condition.setValue(StringUtils.surround(String.valueOf(condition.getValue()),StringUtils.PERCENT));
+                break;
+            default:break;
+        }
+        return SqlUtil.AND + condition.getField() + comparator + condition.getValue();
     }
 
     public static final String equalsSql(String field,Object value){
         return StringUtils.SPACE + field + StringUtils.EQUALS + value + StringUtils.COMMA ;
     }
-
 
     public static final String updateHeadSql(String tableName){
         return UPDATE + tableName + SET ;

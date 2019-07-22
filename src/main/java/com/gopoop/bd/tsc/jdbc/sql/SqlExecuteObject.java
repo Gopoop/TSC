@@ -1,6 +1,7 @@
 package com.gopoop.bd.tsc.jdbc.sql;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.gopoop.bd.tsc.common.utils.SqlUtil;
@@ -8,6 +9,7 @@ import com.gopoop.bd.tsc.common.utils.StringUtils;
 import lombok.Data;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +30,7 @@ public class SqlExecuteObject {
     /**
      * 参数
      */
-    private Map<String,Object> whereConditionMap;
+    private List<Condition> conditions;
     /**
      * 字段定义
      */
@@ -39,10 +41,10 @@ public class SqlExecuteObject {
     public SqlExecuteObject() {
     }
 
-    public SqlExecuteObject(String tableName, Map<String, Object> fieldValueMap, Map<String, Object> whereConditionMap, List<Field> fields) {
+    public SqlExecuteObject(String tableName, Map<String, Object> fieldValueMap, List<Condition> conditions, List<Field> fields) {
         this.tableName = tableName;
         this.fieldValueMap = fieldValueMap;
-        this.whereConditionMap = whereConditionMap;
+        this.conditions = conditions;
         this.fields = fields;
     }
 
@@ -62,7 +64,7 @@ public class SqlExecuteObject {
         /**
          * 参数
          */
-        private Map<String,Object> whereConditionMap;
+        private List<Condition> conditions;
         /**
          * 字段定义
          */
@@ -102,9 +104,16 @@ public class SqlExecuteObject {
             return this;
         }
 
-        public SqlExecuteObject.SqlExecuteObjectBuilder whereConditionMap(Map<String,Object> whereConditionMap) {
-
-            this.whereConditionMap = whereConditionMap;
+        public SqlExecuteObject.SqlExecuteObjectBuilder conditions(List<Condition> conditions) {
+            if(CollectionUtil.isNotEmpty(conditions)){
+                this.conditions = new LinkedList<>();
+                for (Condition condition : conditions) {
+                    if(condition.getValue() instanceof String){
+                        condition.setValue(StringUtils.surround((String)condition.getValue(),StringUtils.SINGLE_QUOTES));
+                    }
+                    this.conditions.add(condition);
+                }
+            }
             return this;
         }
 
@@ -115,7 +124,7 @@ public class SqlExecuteObject {
 
 
         public SqlExecuteObject build() {
-            return new SqlExecuteObject(this.tableName, this.fieldValueMap,this.whereConditionMap,this.fields);
+            return new SqlExecuteObject(this.tableName, this.fieldValueMap,this.conditions,this.fields);
         }
     }
 
