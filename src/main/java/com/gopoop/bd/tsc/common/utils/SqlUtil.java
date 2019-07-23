@@ -9,6 +9,7 @@ public class SqlUtil {
     public static final String UPDATE = "update ";
     public static final String SELECT = "select ";
     public static final String FROM = " from ";
+    public static final String COUNT = " count(*) ";
     public static final String SET = " set  ";
     public static final String WHERE = " where  ";
     public static final String LIMIT = " limit  ";
@@ -16,28 +17,32 @@ public class SqlUtil {
     public static final String AND = " and  ";
     public static final String AS = " as  ";
     public static final String ID = "id";
+    public static final String LIKE = " like ";
     public static final String CREATE_TIME = "create_time";
     public static final String UPDATE_TIME = "update_time";
-
+    public static final String GT = " > ";
+    public static final String LT = " < ";
+    public static final String GT_EQUALS = " >= ";
+    public static final String LT_EQUALS = " <= ";
 
     public static final String whereSql(Condition condition){
         String comparator = StringUtils.EQUALS;
         switch (condition.getCompare()){
             case GT:
-                comparator = StringUtils.GT;
+                comparator = GT;
                 break;
             case LT:
-                comparator = StringUtils.LT;
+                comparator = LT;
                 break;
-            case GR_EQUALS:
-                comparator = StringUtils.GT_EQUALS;
+            case GT_EQUALS:
+                comparator = GT_EQUALS;
                 break;
             case LT_EQUALS:
-                comparator = StringUtils.LT_EQUALS;
+                comparator = LT_EQUALS;
                 break;
             case LIKE:
-                comparator = StringUtils.LIKE;
-                condition.setValue(StringUtils.surround(String.valueOf(condition.getValue()),StringUtils.PERCENT));
+                comparator = LIKE;
+                condition.setValue(String.valueOf(condition.getValue()));
                 break;
             default:break;
         }
@@ -58,5 +63,10 @@ public class SqlUtil {
 
     public static String limitSql(PageParam pageParam) {
         return LIMIT + pageParam.getPageSize() + OFFSET + (pageParam.getPageNow() - 1) * 10;
+    }
+
+    public static String countHeadSql(String tableName) {
+        return SELECT + COUNT + FROM + tableName;
+
     }
 }

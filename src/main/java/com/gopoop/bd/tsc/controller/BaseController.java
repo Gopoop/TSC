@@ -1,7 +1,5 @@
 package com.gopoop.bd.tsc.controller;
 
-import cn.hutool.core.util.ClassUtil;
-import com.gopoop.bd.tsc.entity.PageProcessEntity;
 import com.gopoop.bd.tsc.jdbc.sql.Condition;
 import com.gopoop.bd.tsc.jdbc.sql.PageParam;
 import com.gopoop.bd.tsc.jdbc.sql.SqlExecuteObject;
@@ -25,9 +23,10 @@ public abstract class BaseController<Entity,Req extends PageParam,Bean> {
     @Autowired
     private JdbcService jdbcService;
 
-    protected abstract List<Condition> getCondition(Req req);
 
     protected abstract String getTableName();
+
+    protected abstract Class<Entity> getEntityClass();
 
 
     @ApiOperation(value = "新增接口",httpMethod = "POST")
@@ -45,14 +44,13 @@ public abstract class BaseController<Entity,Req extends PageParam,Bean> {
     }
 
     @ApiOperation(value = "列表获取接口",httpMethod = "POST")
-    @PutMapping("/page")
-    public ResponseVo<PageBean<Bean>> page(@RequestBody Req req){
+    @PostMapping("/page")
+    public ResponseVo<PageBean<Bean>> page(@RequestBody Req req) throws IllegalAccessException {
         SqlExecuteObject sqlExecuteObject = SqlExecuteObject.builder()
-                .conditions(this.getCondition(req))
-                .fields(null)
+                .conditions(req)
                 .tableName(this.getTableName())
                 .pageParam(PageParam.builder().pageNow(req.getPageNow()).pageSize(req.getPageSize()).build())
                 .build();
-        return ResponseVo.successResp(jdbcService.page(sqlExecuteObject));
+        return ResponseVo.successResp(jdbcService.page(sqlExecuteObject,this.getEntityClass()));
     }
 }

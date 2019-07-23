@@ -35,7 +35,7 @@ public class UpdateSqlGenerator extends AbstractSqlGenerator{
     }
 
     @Override
-    public String getParamSql() {
+    public String getWhereSql() {
         for (Map.Entry<String, Object> stringObjectEntry : sqlExecuteObject.getFieldValueMap().entrySet()) {
             if(stringObjectEntry.getKey().equals(SqlUtil.ID)){
                 return SqlUtil.whereSql(Condition.builder().field(stringObjectEntry.getKey()).value(stringObjectEntry.getValue()).build());

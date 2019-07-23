@@ -9,7 +9,7 @@ public enum Compare {
     GT,
     LT,
     LT_EQUALS,
-    GR_EQUALS,
+    GT_EQUALS,
     LIKE;
 
 }

@@ -29,7 +29,7 @@ public class SelectSqlGenerator extends AbstractSqlGenerator{
     public String getMainSql() {
         StringBuffer sql = new StringBuffer(SqlUtil.SELECT);
         if(CollectionUtil.isEmpty(sqlExecuteObject.getFields())){
-            sql.append("*");
+            sql.append("* ");
         }else{
             for (Field field : sqlExecuteObject.getFields()) {
                 if(field.getIsShow()){
@@ -43,20 +43,26 @@ public class SelectSqlGenerator extends AbstractSqlGenerator{
     }
 
     @Override
-    public String getParamSql() {
+    public String getWhereSql() {
         if(CollectionUtil.isNotEmpty(sqlExecuteObject.getConditions())){
-            StringBuffer whereSql = new StringBuffer(StringUtils.SPACE + "1 = 1 ");
+            StringBuffer whereSql = new StringBuffer(SqlUtil.WHERE + "1 = 1 ");
             for (Condition condition : sqlExecuteObject.getConditions()) {
                 whereSql.append(SqlUtil.whereSql(condition));
             }
+            return whereSql.toString();
         }
         return StringUtils.EMPTY;
     }
 
     @Override
-    protected String getLimitSql() {
+    public String getLimitSql() {
         Assert.notNull(sqlExecuteObject.getPageParam());
         return SqlUtil.limitSql(sqlExecuteObject.getPageParam());
+    }
+
+
+    public String getCountSql(){
+        return SqlUtil.countHeadSql(sqlExecuteObject.getTableName()) + this.getWhereSql();
     }
 
 

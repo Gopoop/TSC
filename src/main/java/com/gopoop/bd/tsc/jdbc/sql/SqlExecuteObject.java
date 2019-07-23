@@ -2,16 +2,15 @@ package com.gopoop.bd.tsc.jdbc.sql;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
 import com.gopoop.bd.tsc.common.utils.SqlUtil;
 import com.gopoop.bd.tsc.common.utils.StringUtils;
 import lombok.Data;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author 郭速凯
@@ -108,14 +107,40 @@ public class SqlExecuteObject {
             return this;
         }
 
-        public SqlExecuteObject.SqlExecuteObjectBuilder conditions(List<Condition> conditions) {
-            if(CollectionUtil.isNotEmpty(conditions)){
+        public SqlExecuteObject.SqlExecuteObjectBuilder conditions(Object req) throws IllegalAccessException {
+            if(req != null){
                 this.conditions = new LinkedList<>();
-                for (Condition condition : conditions) {
-                    if(condition.getValue() instanceof String){
-                        condition.setValue(StringUtils.surround((String)condition.getValue(),StringUtils.SINGLE_QUOTES));
+                java.lang.reflect.Field[] fields = ClassUtil.getDeclaredFields(req.getClass());
+
+                for (java.lang.reflect.Field field : fields) {
+                    field.setAccessible(Boolean.TRUE);
+                    Object value = field.get(req);
+                    if(value == null){
+                        continue;
                     }
-                    this.conditions.add(condition);
+                    Condition.ConditionBuilder builder = Condition.builder();
+                    String fieldName = StringUtils.toUnderlineCase(field.getName());
+                    builder.field(fieldName);
+                    //string类型统一使用like查询
+                    if(field.getType() == String.class){
+                        builder.value(StringUtils.surround(StringUtils.surround((String)value,StringUtils.PERCENT),StringUtils.SINGLE_QUOTES))
+                                .compare(Compare.LIKE);
+                    }
+                    // date类型  时间区间
+                    else if(field.getType() == Date.class && fieldName.startsWith("start_")){
+                        builder.field(StringUtils.replace(fieldName,"start_",StringUtils.EMPTY))
+                                .value(StringUtils.surround(DateUtil.format((Date)value, DatePattern.NORM_DATETIME_PATTERN),StringUtils.SINGLE_QUOTES))
+                                .compare(Compare.GT_EQUALS);
+                    }else if(field.getType() == Date.class && fieldName.startsWith("end_")){
+                        builder.field(StringUtils.replace(fieldName,"end_",StringUtils.EMPTY))
+                                .value(StringUtils.surround(DateUtil.format((Date)value, DatePattern.NORM_DATETIME_PATTERN),StringUtils.SINGLE_QUOTES))
+                                .compare(Compare.LT_EQUALS);
+                    }
+                    //基础类型
+                    else{
+                        builder.value(field.get(req)).compare(Compare.EQUALS);
+                    }
+                    this.conditions.add(builder.build());
                 }
             }
             return this;

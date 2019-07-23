@@ -40,7 +40,7 @@ public class InsertSqlGenerator extends AbstractSqlGenerator{
     }
 
     @Override
-    public String getParamSql() {
+    public String getWhereSql() {
         return StringUtils.EMPTY;
     }
 
@@ -48,5 +48,4 @@ public class InsertSqlGenerator extends AbstractSqlGenerator{
     protected String getLimitSql() {
         return StringUtils.EMPTY;
     }
-
 }

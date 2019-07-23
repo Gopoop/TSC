@@ -9,6 +9,7 @@ import com.gopoop.bd.tsc.jdbc.sql.generator.SqlGenerator;
 import com.gopoop.bd.tsc.jdbc.sql.generator.UpdateSqlGenerator;
 import com.gopoop.bd.tsc.vo.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -56,12 +58,24 @@ public class JdbcService {
         return jdbcTemplate.update(generator.generate());
     }
 
-    public List<Map<String, Object>> list(SqlExecuteObject sqlExecuteObject){
+    public <T> List<T> list(SqlExecuteObject sqlExecuteObject,Class<T> classType){
         SqlGenerator generator = new SelectSqlGenerator(sqlExecuteObject);
-        return jdbcTemplate.queryForList(generator.generate());
+        return jdbcTemplate.query(generator.generate(),new BeanPropertyRowMapper<>(classType));
     }
 
 
+    public Long count(SqlExecuteObject sqlExecuteObject){
+        SelectSqlGenerator generator = new SelectSqlGenerator(sqlExecuteObject);
+        return jdbcTemplate.queryForObject(generator.getCountSql(),Long.class);
+    }
 
 
+    public <T> PageBean<T> page(SqlExecuteObject sqlExecuteObject,Class<T> classType) {
+        Long count = this.count(sqlExecuteObject);
+        if(count > 0){
+            List<T> result = this.list(sqlExecuteObject,classType);
+            return new PageBean<T>(result,count,sqlExecuteObject.getPageParam().getPageNow(),sqlExecuteObject.getPageParam().getPageSize());
+        }
+        return new PageBean<T>(new ArrayList(),0L,sqlExecuteObject.getPageParam().getPageNow(),sqlExecuteObject.getPageParam().getPageSize());
+    }
 }

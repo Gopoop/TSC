@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PageBean<T> {
     private List<T> list;
-    private Integer total;
+    private Long total;
     private Integer pageNow;
     private Integer pageSize;
 }
