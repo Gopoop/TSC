@@ -25,7 +25,7 @@ public class UpdateSqlGenerator extends AbstractSqlGenerator{
     public String getMainSql() {
         StringBuffer sql = new StringBuffer(SqlUtil.updateHeadSql(sqlExecuteObject.getTableName()));
         for (Map.Entry<String, Object> stringObjectEntry : sqlExecuteObject.getFieldValueMap().entrySet()) {
-            if(stringObjectEntry.getKey().equals(SqlUtil.ID)){
+            if(stringObjectEntry.getKey().equals(SqlUtil.ID) || stringObjectEntry.getKey().equals(SqlUtil.CREATE_TIME)){
                 continue;
             }
             sql.append(SqlUtil.equalsSql(stringObjectEntry.getKey(),stringObjectEntry.getValue()));
@@ -38,7 +38,7 @@ public class UpdateSqlGenerator extends AbstractSqlGenerator{
     public String getWhereSql() {
         for (Map.Entry<String, Object> stringObjectEntry : sqlExecuteObject.getFieldValueMap().entrySet()) {
             if(stringObjectEntry.getKey().equals(SqlUtil.ID)){
-                return SqlUtil.whereSql(Condition.builder().field(stringObjectEntry.getKey()).value(stringObjectEntry.getValue()).build());
+                return SqlUtil.WHERE + "1 = 1 " + SqlUtil.whereSql(Condition.builder().field(stringObjectEntry.getKey()).value(stringObjectEntry.getValue()).build());
             }
         }
         return StringUtils.EMPTY;
