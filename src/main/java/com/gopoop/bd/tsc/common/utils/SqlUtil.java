@@ -27,24 +27,26 @@ public class SqlUtil {
 
     public static final String whereSql(Condition condition){
         String comparator = StringUtils.EQUALS;
-        switch (condition.getCompare()){
-            case GT:
-                comparator = GT;
-                break;
-            case LT:
-                comparator = LT;
-                break;
-            case GT_EQUALS:
-                comparator = GT_EQUALS;
-                break;
-            case LT_EQUALS:
-                comparator = LT_EQUALS;
-                break;
-            case LIKE:
-                comparator = LIKE;
-                condition.setValue(String.valueOf(condition.getValue()));
-                break;
-            default:break;
+        if(condition.getCompare() != null){
+            switch (condition.getCompare()){
+                case GT:
+                    comparator = GT;
+                    break;
+                case LT:
+                    comparator = LT;
+                    break;
+                case GT_EQUALS:
+                    comparator = GT_EQUALS;
+                    break;
+                case LT_EQUALS:
+                    comparator = LT_EQUALS;
+                    break;
+                case LIKE:
+                    comparator = LIKE;
+                    condition.setValue(String.valueOf(condition.getValue()));
+                    break;
+                default:break;
+            }
         }
         return SqlUtil.AND + condition.getField() + comparator + condition.getValue();
     }

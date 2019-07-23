@@ -107,9 +107,17 @@ public class SqlExecuteObject {
             return this;
         }
 
+        public SqlExecuteObject.SqlExecuteObjectBuilder condition(Condition condition){
+            this.initConditions();
+            this.conditions.add(condition);
+            return this;
+        }
+
+
+
         public SqlExecuteObject.SqlExecuteObjectBuilder conditions(Object req) throws IllegalAccessException {
             if(req != null){
-                this.conditions = new LinkedList<>();
+                this.initConditions();
                 java.lang.reflect.Field[] fields = ClassUtil.getDeclaredFields(req.getClass());
 
                 for (java.lang.reflect.Field field : fields) {
@@ -159,6 +167,12 @@ public class SqlExecuteObject {
 
         public SqlExecuteObject build() {
             return new SqlExecuteObject(this.tableName, this.fieldValueMap,this.conditions,this.fields,this.pageParam);
+        }
+
+        private void initConditions() {
+            if(this.conditions == null){
+                this.conditions = new LinkedList<>();
+            }
         }
     }
 

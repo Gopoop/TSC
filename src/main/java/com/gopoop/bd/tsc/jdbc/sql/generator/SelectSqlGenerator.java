@@ -56,8 +56,10 @@ public class SelectSqlGenerator extends AbstractSqlGenerator{
 
     @Override
     public String getLimitSql() {
-        Assert.notNull(sqlExecuteObject.getPageParam());
-        return SqlUtil.limitSql(sqlExecuteObject.getPageParam());
+        if(sqlExecuteObject.getPageParam() != null){
+            return SqlUtil.limitSql(sqlExecuteObject.getPageParam());
+        }
+        return StringUtils.EMPTY;
     }
 
 

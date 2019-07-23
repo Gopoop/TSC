@@ -1,16 +1,17 @@
 package com.gopoop.bd.tsc.controller;
 
+import com.gopoop.bd.tsc.common.utils.SqlUtil;
+import com.gopoop.bd.tsc.jdbc.sql.Compare;
 import com.gopoop.bd.tsc.jdbc.sql.Condition;
 import com.gopoop.bd.tsc.jdbc.sql.PageParam;
 import com.gopoop.bd.tsc.jdbc.sql.SqlExecuteObject;
 import com.gopoop.bd.tsc.service.JdbcService;
 import com.gopoop.bd.tsc.vo.PageBean;
 import com.gopoop.bd.tsc.vo.ResponseVo;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -52,5 +53,16 @@ public abstract class BaseController<Entity,Req extends PageParam,Bean> {
                 .pageParam(PageParam.builder().pageNow(req.getPageNow()).pageSize(req.getPageSize()).build())
                 .build();
         return ResponseVo.successResp(jdbcService.page(sqlExecuteObject,this.getEntityClass()));
+    }
+
+    @ApiOperation(value = "通过id获取",httpMethod = "GET")
+    @ApiImplicitParam(name="id",value = "id",dataType = "int",paramType = "path")
+    @GetMapping("/{id}")
+    public ResponseVo<Bean> page(@PathVariable("id") Integer id) throws IllegalAccessException {
+        SqlExecuteObject sqlExecuteObject = SqlExecuteObject.builder()
+                .condition(Condition.builder().field(SqlUtil.ID).value(id).build())
+                .tableName(this.getTableName())
+                .build();
+        return ResponseVo.successResp(jdbcService.selectOne(sqlExecuteObject,this.getEntityClass()));
     }
 }

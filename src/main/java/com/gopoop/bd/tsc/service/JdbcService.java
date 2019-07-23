@@ -78,4 +78,9 @@ public class JdbcService {
         }
         return new PageBean<T>(new ArrayList(),0L,sqlExecuteObject.getPageParam().getPageNow(),sqlExecuteObject.getPageParam().getPageSize());
     }
+
+    public <T> T selectOne(SqlExecuteObject sqlExecuteObject,Class<T> classType){
+        SelectSqlGenerator generator = new SelectSqlGenerator(sqlExecuteObject);
+        return jdbcTemplate.queryForObject(generator.generate(),new BeanPropertyRowMapper<>(classType));
+    }
 }
