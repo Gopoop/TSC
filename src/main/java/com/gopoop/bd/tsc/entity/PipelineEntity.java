@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @date 2019/7/17 18:53
  */
 @Data
-public class PinelineEntity implements Serializable {
+public class PipelineEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
