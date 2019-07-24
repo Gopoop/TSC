@@ -1,4 +1,4 @@
-package com.gopoop.bd.tsc.entity;
+package com.gopoop.bd.tsc.spider;
 
 import lombok.Data;
 
@@ -10,18 +10,7 @@ import java.util.Date;
  * @date 2019/7/17 18:54
  */
 @Data
-public class PageProcessEntity implements Serializable {
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * id
-     */
-    private Integer id;
-
-    /**
-     * 爬虫id
-     */
-    private Integer spiderId;
+public class PageProcessConfig{
 
     /**
      * 提取规则  策略列表 json存储
@@ -67,16 +56,5 @@ public class PageProcessEntity implements Serializable {
      * 后续抓取url
      */
     private String targetRequestsRegex;
-
-    /**
-     * create_time
-     */
-    private Date createTime;
-
-    /**
-     * update_time
-     */
-    private Date updateTime;
-
 
 }

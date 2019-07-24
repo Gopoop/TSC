@@ -1,27 +1,16 @@
-package com.gopoop.bd.tsc.entity;
+package com.gopoop.bd.tsc.spider;
 
 import java.io.Serializable;
 import lombok.Data;
 import java.util.Date;
+import java.util.List;
 
 /**
  *  网站配置
  * @author gopoop 2019-07-17
  */
 @Data
-public class SiteEntity implements Serializable {
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * id
-     */
-    private Integer id;
-
-    /**
-     * 爬虫id
-     */
-    private Integer spiderId;
-
+public class SiteConfig  {
     /**
      * 为空默认是utf-8
      */
@@ -48,9 +37,9 @@ public class SiteEntity implements Serializable {
     private Integer cycleRetryTime;
 
     /**
-     * cookies 列表 用json存储
+     * cookies 列表
      */
-    private String cookies;
+    private List<String> cookies;
 
     /**
      * 域名
@@ -58,24 +47,14 @@ public class SiteEntity implements Serializable {
     private String domain;
 
     /**
-     * headers 用json存储
+     * headers
      */
-    private String headers;
+    private List<String> headers;
 
     /**
      * http代理 如127.0.0.1:8080
      */
     private String httpProxy;
-
-    /**
-     * create_time
-     */
-    private Date createTime;
-
-    /**
-     * update_time
-     */
-    private Date updateTime;
 
 
 }

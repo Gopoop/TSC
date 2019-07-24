@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 郭速凯
@@ -33,18 +34,13 @@ public abstract class BaseController<Entity,Req extends PageParam,Bean> {
      */
     protected abstract String getTableName();
 
-    /**
-     * 获取数据库持久化类class对象
-     * @return
-     */
-    protected abstract Class<Entity> getEntityClass();
 
     /**
      * 自定义数据复制
      * @param entity
      * @return
      */
-    protected abstract Bean copyProperties(Entity entity);
+    protected abstract Bean copyProperties(Map<String,Object> entity);
 
     @ApiOperation(value = "新增接口",httpMethod = "POST")
     @PostMapping("/create")
@@ -68,11 +64,11 @@ public abstract class BaseController<Entity,Req extends PageParam,Bean> {
                 .tableName(this.getTableName())
                 .pageParam(PageParam.builder().pageNow(req.getPageNow()).pageSize(req.getPageSize()).build())
                 .build();
-        PageBean pageBean = jdbcService.page(sqlExecuteObject,this.getEntityClass());
+        PageBean pageBean = jdbcService.page(sqlExecuteObject);
         if(CollectionUtil.isNotEmpty(pageBean.getList())){
             List<Bean> beans = new LinkedList<>();
             for (Object entity: pageBean.getList()) {
-                beans.add(this.copyProperties((Entity) entity));
+                beans.add(this.copyProperties((Map<String, Object>)entity));
             }
             pageBean.setList(beans);
         }
@@ -87,7 +83,6 @@ public abstract class BaseController<Entity,Req extends PageParam,Bean> {
                 .condition(Condition.builder().field(SqlUtil.ID).value(id).build())
                 .tableName(this.getTableName())
                 .build();
-        Entity entity = jdbcService.selectOne(sqlExecuteObject,this.getEntityClass());
-        return ResponseVo.successResp(this.copyProperties(entity));
+        return ResponseVo.successResp(this.copyProperties(jdbcService.selectOne(sqlExecuteObject)));
     }
 }

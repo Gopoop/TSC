@@ -1,8 +1,13 @@
 package com.gopoop.bd.tsc.entity;
 
 import java.io.Serializable;
+
+import com.gopoop.bd.tsc.spider.PageProcessConfig;
+import com.gopoop.bd.tsc.spider.PipelineConfig;
+import com.gopoop.bd.tsc.spider.SiteConfig;
 import lombok.Data;
 import java.util.Date;
+import java.util.List;
 
 /**
  *  爬虫配置
@@ -61,7 +66,18 @@ public class SpiderEntity implements Serializable {
      * 状态 0 初始化 1 运行中 2停止
      */
     private Integer stat;
-
+    /**
+     * 页面处理规则
+     */
+    private String pageProcessConfigs;
+    /**
+     * 持久化规则
+     */
+    private String pipelineConfig;
+    /**
+     * 网站配置
+     */
+    private String siteConfig;
     /**
      * create_time
      */

@@ -69,13 +69,11 @@ public class JdbcService {
     /**
      * 列表查询
      * @param sqlExecuteObject
-     * @param classType
-     * @param <T>
      * @return
      */
-    public <T> List<T> list(SqlExecuteObject sqlExecuteObject,Class<T> classType){
+    public List<Map<String,Object>> list(SqlExecuteObject sqlExecuteObject){
         SqlGenerator generator = new SelectSqlGenerator(sqlExecuteObject);
-        return jdbcTemplate.query(generator.generate(),new BeanPropertyRowMapper<>(classType));
+        return jdbcTemplate.queryForList(generator.generate());
     }
 
     /**
@@ -91,28 +89,24 @@ public class JdbcService {
     /**
      * 分页获取
      * @param sqlExecuteObject
-     * @param classType
-     * @param <T>
      * @return
      */
-    public <T> PageBean<T> page(SqlExecuteObject sqlExecuteObject,Class<T> classType) {
+    public PageBean page(SqlExecuteObject sqlExecuteObject) {
         Long count = this.count(sqlExecuteObject);
         if(count > 0){
-            List<T> result = this.list(sqlExecuteObject,classType);
-            return new PageBean<T>(result,count,sqlExecuteObject.getPageParam().getPageNow(),sqlExecuteObject.getPageParam().getPageSize());
+            List<Map<String,Object>> result = this.list(sqlExecuteObject);
+            return new PageBean(result,count,sqlExecuteObject.getPageParam().getPageNow(),sqlExecuteObject.getPageParam().getPageSize());
         }
-        return new PageBean<T>(new ArrayList(),0L,sqlExecuteObject.getPageParam().getPageNow(),sqlExecuteObject.getPageParam().getPageSize());
+        return new PageBean(new ArrayList(),0L,sqlExecuteObject.getPageParam().getPageNow(),sqlExecuteObject.getPageParam().getPageSize());
     }
 
     /**
      * 获取单条记录
      * @param sqlExecuteObject
-     * @param classType
-     * @param <T>
      * @return
      */
-    public <T> T selectOne(SqlExecuteObject sqlExecuteObject,Class<T> classType){
+    public Map<String, Object> selectOne(SqlExecuteObject sqlExecuteObject){
         SelectSqlGenerator generator = new SelectSqlGenerator(sqlExecuteObject);
-        return jdbcTemplate.queryForObject(generator.generate(),new BeanPropertyRowMapper<>(classType));
+        return jdbcTemplate.queryForMap(generator.generate());
     }
 }
