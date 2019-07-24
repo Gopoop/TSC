@@ -79,6 +79,7 @@ public class SpiderManager {
     public void start(Integer spiderId){
         Spider spider = spiderCache.get(spiderId);
         spider.start();
+        //TODO 更新启动时间
     }
 
     /**
@@ -88,6 +89,7 @@ public class SpiderManager {
     public void stop(Integer spiderId){
         Spider spider = spiderCache.get(spiderId);
         spider.stop();
+        //TODO 记录暂停时间  记录爬取的数量等信息
     }
 
 }
