@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @author 郭速凯
+ *
  * @date 2019/7/24 15:49
  */
 @Component
@@ -32,6 +32,9 @@ public class SpiderManager {
     @Autowired
     private JdbcService jdbcService;
 
+    /**
+     * 初始化爬虫池
+     */
     @PostConstruct
     public void initPool() {
         List<Map<String,Object>> spiderMaps = jdbcService.list(SqlExecuteObject.builder().tableName("spider").build());

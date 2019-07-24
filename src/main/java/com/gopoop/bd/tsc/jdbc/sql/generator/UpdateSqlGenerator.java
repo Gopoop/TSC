@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * @author 郭速凯
+ *
  * @date 2019/7/19 12:25
  */
 public class UpdateSqlGenerator extends AbstractSqlGenerator{

@@ -7,7 +7,7 @@ import com.gopoop.bd.tsc.jdbc.sql.SqlExecuteObject;
 import java.util.*;
 
 /**
- * @author 郭速凯
+ *
  * @date 2019/7/19 12:25
  */
 public class InsertSqlGenerator extends AbstractSqlGenerator{

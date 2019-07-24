@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @author 郭速凯
+ *
  * @date 2019/7/17 18:54
  */
 @Data
