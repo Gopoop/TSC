@@ -1,6 +1,7 @@
 package com.gopoop.bd.tsc.controller;
 
 
+import cn.hutool.core.bean.BeanUtil;
 import com.gopoop.bd.tsc.entity.PageProcessEntity;
 
 import com.gopoop.bd.tsc.vo.req.PageProcessPageRequest;
@@ -29,6 +30,13 @@ public class PageProcessController extends BaseController<PageProcessEntity, Pag
     @Override
     protected Class<PageProcessEntity> getEntityClass() {
         return PageProcessEntity.class;
+    }
+
+    @Override
+    protected PageProcessBean copyProperties(PageProcessEntity pageProcessEntity) {
+        PageProcessBean bean = new PageProcessBean();
+        BeanUtil.copyProperties(pageProcessEntity,bean);
+        return bean;
     }
 
 }

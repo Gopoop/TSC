@@ -27,5 +27,10 @@ public class SiteController extends BaseController<SiteEntity, SitePageRequest, 
         return SiteEntity.class;
     }
 
+    @Override
+    protected SiteBean copyProperties(SiteEntity siteEntity) {
+        return null;
+    }
+
 }
 

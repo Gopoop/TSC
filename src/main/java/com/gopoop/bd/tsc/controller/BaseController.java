@@ -1,5 +1,7 @@
 package com.gopoop.bd.tsc.controller;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import com.gopoop.bd.tsc.common.utils.SqlUtil;
 import com.gopoop.bd.tsc.jdbc.sql.Compare;
 import com.gopoop.bd.tsc.jdbc.sql.Condition;
@@ -13,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -24,11 +27,24 @@ public abstract class BaseController<Entity,Req extends PageParam,Bean> {
     @Autowired
     private JdbcService jdbcService;
 
-
+    /**
+     * 获取表名
+     * @return
+     */
     protected abstract String getTableName();
 
+    /**
+     * 获取数据库持久化类class对象
+     * @return
+     */
     protected abstract Class<Entity> getEntityClass();
 
+    /**
+     * 自定义数据复制
+     * @param entity
+     * @return
+     */
+    protected abstract Bean copyProperties(Entity entity);
 
     @ApiOperation(value = "新增接口",httpMethod = "POST")
     @PostMapping("/create")
@@ -52,17 +68,26 @@ public abstract class BaseController<Entity,Req extends PageParam,Bean> {
                 .tableName(this.getTableName())
                 .pageParam(PageParam.builder().pageNow(req.getPageNow()).pageSize(req.getPageSize()).build())
                 .build();
-        return ResponseVo.successResp(jdbcService.page(sqlExecuteObject,this.getEntityClass()));
+        PageBean pageBean = jdbcService.page(sqlExecuteObject,this.getEntityClass());
+        if(CollectionUtil.isNotEmpty(pageBean.getList())){
+            List<Bean> beans = new LinkedList<>();
+            for (Object entity: pageBean.getList()) {
+                beans.add(this.copyProperties((Entity) entity));
+            }
+            pageBean.setList(beans);
+        }
+        return ResponseVo.successResp(pageBean);
     }
 
     @ApiOperation(value = "通过id获取",httpMethod = "GET")
     @ApiImplicitParam(name="id",value = "id",dataType = "int",paramType = "path")
     @GetMapping("/{id}")
-    public ResponseVo<Bean> page(@PathVariable("id") Integer id) throws IllegalAccessException {
+    public ResponseVo<Bean> page(@PathVariable("id") Integer id){
         SqlExecuteObject sqlExecuteObject = SqlExecuteObject.builder()
                 .condition(Condition.builder().field(SqlUtil.ID).value(id).build())
                 .tableName(this.getTableName())
                 .build();
-        return ResponseVo.successResp(jdbcService.selectOne(sqlExecuteObject,this.getEntityClass()));
+        Entity entity = jdbcService.selectOne(sqlExecuteObject,this.getEntityClass());
+        return ResponseVo.successResp(this.copyProperties(entity));
     }
 }

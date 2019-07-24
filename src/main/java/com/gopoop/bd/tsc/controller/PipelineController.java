@@ -29,5 +29,10 @@ public class PipelineController extends BaseController<PipelineEntity, PipelineP
         return PipelineEntity.class;
     }
 
+    @Override
+    protected PipelineBean copyProperties(PipelineEntity pipelineEntity) {
+        return null;
+    }
+
 }
 

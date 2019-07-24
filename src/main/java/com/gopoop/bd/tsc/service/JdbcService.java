@@ -38,7 +38,11 @@ public class JdbcService {
         return jdbcTemplate;
     }
 
-
+    /**
+     * 插入
+     * @param executeObject
+     * @return
+     */
     public int insert(SqlExecuteObject executeObject){
         SqlGenerator generator = new InsertSqlGenerator(executeObject);
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -52,24 +56,45 @@ public class JdbcService {
         return keyHolder.getKey().intValue();
     }
 
-
+    /**
+     * 更新
+     * @param executeObject
+     * @return
+     */
     public int update(SqlExecuteObject executeObject){
         SqlGenerator generator = new UpdateSqlGenerator(executeObject);
         return jdbcTemplate.update(generator.generate());
     }
 
+    /**
+     * 列表查询
+     * @param sqlExecuteObject
+     * @param classType
+     * @param <T>
+     * @return
+     */
     public <T> List<T> list(SqlExecuteObject sqlExecuteObject,Class<T> classType){
         SqlGenerator generator = new SelectSqlGenerator(sqlExecuteObject);
         return jdbcTemplate.query(generator.generate(),new BeanPropertyRowMapper<>(classType));
     }
 
-
+    /**
+     * 查询总数
+     * @param sqlExecuteObject
+     * @return
+     */
     public Long count(SqlExecuteObject sqlExecuteObject){
         SelectSqlGenerator generator = new SelectSqlGenerator(sqlExecuteObject);
         return jdbcTemplate.queryForObject(generator.getCountSql(),Long.class);
     }
 
-
+    /**
+     * 分页获取
+     * @param sqlExecuteObject
+     * @param classType
+     * @param <T>
+     * @return
+     */
     public <T> PageBean<T> page(SqlExecuteObject sqlExecuteObject,Class<T> classType) {
         Long count = this.count(sqlExecuteObject);
         if(count > 0){
@@ -79,6 +104,13 @@ public class JdbcService {
         return new PageBean<T>(new ArrayList(),0L,sqlExecuteObject.getPageParam().getPageNow(),sqlExecuteObject.getPageParam().getPageSize());
     }
 
+    /**
+     * 获取单条记录
+     * @param sqlExecuteObject
+     * @param classType
+     * @param <T>
+     * @return
+     */
     public <T> T selectOne(SqlExecuteObject sqlExecuteObject,Class<T> classType){
         SelectSqlGenerator generator = new SelectSqlGenerator(sqlExecuteObject);
         return jdbcTemplate.queryForObject(generator.generate(),new BeanPropertyRowMapper<>(classType));

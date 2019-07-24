@@ -26,5 +26,10 @@ public class SpiderController extends BaseController<SpiderEntity, SpiderPageReq
         return SpiderEntity.class;
     }
 
+    @Override
+    protected SpiderBean copyProperties(SpiderEntity spiderEntity) {
+        return null;
+    }
+
 }
 
