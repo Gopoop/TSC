@@ -2,12 +2,8 @@ package com.gopoop.bd.tsc.entity;
 
 import java.io.Serializable;
 
-import com.gopoop.bd.tsc.spider.PageProcessConfig;
-import com.gopoop.bd.tsc.spider.PipelineConfig;
-import com.gopoop.bd.tsc.spider.SiteConfig;
 import lombok.Data;
 import java.util.Date;
-import java.util.List;
 
 /**
  *  爬虫配置

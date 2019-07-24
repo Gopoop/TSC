@@ -1,8 +1,8 @@
 package com.gopoop.bd.tsc.spider;
 
-import java.io.Serializable;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -10,50 +10,25 @@ import java.util.List;
  * @author gopoop 2019-07-17
  */
 @Data
+@ApiModel
 public class SiteConfig  {
-    /**
-     * 为空默认是utf-8
-     */
+    @ApiModelProperty(notes = "编码  默认是utf-8")
     private String charset;
-
-    /**
-     * user_agent
-     */
+    @ApiModelProperty(notes = "userAgent")
     private String userAgent;
-
-    /**
-     * 超市时间 默认3秒
-     */
+    @ApiModelProperty(notes = "超市时间 默认3秒")
     private Integer timeOut;
-
-    /**
-     * 重试次数 默认3次
-     */
+    @ApiModelProperty(notes = "重试次数 默认3次")
     private Integer retryTime;
-
-    /**
-     * 循环重试次数 默认3次
-     */
+    @ApiModelProperty(notes = "循环重试次数 默认3次")
     private Integer cycleRetryTime;
-
-    /**
-     * cookies 列表
-     */
+    @ApiModelProperty(notes = "cookies 列表")
     private List<String> cookies;
-
-    /**
-     * 域名
-     */
+    @ApiModelProperty(notes = "域名")
     private String domain;
-
-    /**
-     * headers
-     */
+    @ApiModelProperty(notes = "headers")
     private List<String> headers;
-
-    /**
-     * http代理 如127.0.0.1:8080
-     */
+    @ApiModelProperty(notes = "http代理 如127.0.0.1:8080")
     private String httpProxy;
 
 

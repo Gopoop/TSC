@@ -1,12 +1,11 @@
 package com.gopoop.bd.tsc.spider;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.gopoop.bd.tsc.entity.SpiderEntity;
 import com.gopoop.bd.tsc.jdbc.sql.SqlExecuteObject;
 import com.gopoop.bd.tsc.service.JdbcService;
-import com.gopoop.bd.tsc.vo.ResponseVo;
+import com.gopoop.bd.tsc.spider.pageprocess.PageProcessConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.*;

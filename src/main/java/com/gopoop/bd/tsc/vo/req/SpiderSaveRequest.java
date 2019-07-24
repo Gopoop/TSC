@@ -1,4 +1,4 @@
-package com.gopoop.bd.tsc.vo.resp;
+package com.gopoop.bd.tsc.vo.req;
 
 import com.gopoop.bd.tsc.spider.pageprocess.PageProcessConfig;
 import com.gopoop.bd.tsc.spider.PipelineConfig;
@@ -7,12 +7,11 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.Date;
 import java.util.List;
 
 @Data
 @ApiModel
-public class SpiderBean {
+public class SpiderSaveRequest {
     @ApiModelProperty(notes = "id")
     private Integer id;
     @ApiModelProperty(notes = "名称")
@@ -39,12 +38,4 @@ public class SpiderBean {
     private PipelineConfig pipelineConfig;
     @ApiModelProperty(notes = "网站配置")
     private SiteConfig siteConfig;
-    @ApiModelProperty(notes = "开始时间")
-    private Date startTime;
-    @ApiModelProperty(notes = "爬取网页数量")
-    private Integer pageCount;
-    @ApiModelProperty(notes = "创建时间")
-    private Date createTime;
-    @ApiModelProperty(notes = "更新时间")
-    private Date updateTime;
 }
