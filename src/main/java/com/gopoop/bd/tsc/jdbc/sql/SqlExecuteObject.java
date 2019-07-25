@@ -39,6 +39,7 @@ public class SqlExecuteObject {
      */
     private PageParam pageParam;
 
+    private Class entity;
 
 
     public SqlExecuteObject() {
@@ -77,7 +78,6 @@ public class SqlExecuteObject {
          * 分页参数
          */
         private PageParam pageParam;
-
 
         public SqlExecuteObject.SqlExecuteObjectBuilder tableName(String tableName) {
             this.tableName = tableName;

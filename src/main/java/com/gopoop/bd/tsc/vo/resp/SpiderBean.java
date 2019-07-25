@@ -6,6 +6,7 @@ import com.gopoop.bd.tsc.spider.SiteConfig;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import us.codecraft.webmagic.Spider;
 
 import java.util.Date;
 import java.util.List;
@@ -32,7 +33,7 @@ public class SpiderBean {
     @ApiModelProperty(notes = "持久化方式 1 mysql 2 json文件")
     private Integer persistPattern;
     @ApiModelProperty(notes = "状态 0 初始化 1 运行中 2停止")
-    private Integer stat;
+    private Spider.Status status;
     @ApiModelProperty(notes = "页面处理规则")
     private List<PageProcessConfig> pageProcessConfigs;
     @ApiModelProperty(notes = "持久化规则")
@@ -42,7 +43,7 @@ public class SpiderBean {
     @ApiModelProperty(notes = "开始时间")
     private Date startTime;
     @ApiModelProperty(notes = "爬取网页数量")
-    private Integer pageCount;
+    private Long pageCount;
     @ApiModelProperty(notes = "创建时间")
     private Date createTime;
     @ApiModelProperty(notes = "更新时间")

@@ -1,13 +1,10 @@
 package com.gopoop.bd.tsc.service;
 
-import cn.hutool.core.collection.CollectionUtil;
-import com.gopoop.bd.tsc.common.utils.StringUtils;
 import com.gopoop.bd.tsc.jdbc.sql.SqlExecuteObject;
 import com.gopoop.bd.tsc.jdbc.sql.generator.InsertSqlGenerator;
 import com.gopoop.bd.tsc.jdbc.sql.generator.SelectSqlGenerator;
 import com.gopoop.bd.tsc.jdbc.sql.generator.SqlGenerator;
 import com.gopoop.bd.tsc.jdbc.sql.generator.UpdateSqlGenerator;
-import com.gopoop.bd.tsc.vo.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +30,7 @@ public class JdbcService {
     private JdbcTemplate jdbcTemplate;
 
 
-    public JdbcTemplate getJdbcTemplate() {
+    protected JdbcTemplate getJdbcTemplate() {
         return jdbcTemplate;
     }
 
@@ -71,9 +67,19 @@ public class JdbcService {
      * @param sqlExecuteObject
      * @return
      */
-    public List<Map<String,Object>> list(SqlExecuteObject sqlExecuteObject){
+    public List<Map<String,Object>> listMap(SqlExecuteObject sqlExecuteObject){
         SqlGenerator generator = new SelectSqlGenerator(sqlExecuteObject);
         return jdbcTemplate.queryForList(generator.generate());
+    }
+
+    /**
+     * 列表查询
+     * @param sqlExecuteObject
+     * @return
+     */
+    public <T> List<T> listObject(SqlExecuteObject sqlExecuteObject,Class<T> tClass){
+        SqlGenerator generator = new SelectSqlGenerator(sqlExecuteObject);
+        return jdbcTemplate.query(generator.generate(),new BeanPropertyRowMapper<>(tClass));
     }
 
     /**
@@ -86,27 +92,26 @@ public class JdbcService {
         return jdbcTemplate.queryForObject(generator.getCountSql(),Long.class);
     }
 
-    /**
-     * 分页获取
-     * @param sqlExecuteObject
-     * @return
-     */
-    public PageBean page(SqlExecuteObject sqlExecuteObject) {
-        Long count = this.count(sqlExecuteObject);
-        if(count > 0){
-            List<Map<String,Object>> result = this.list(sqlExecuteObject);
-            return new PageBean(result,count,sqlExecuteObject.getPageParam().getPageNow(),sqlExecuteObject.getPageParam().getPageSize());
-        }
-        return new PageBean(new ArrayList(),0L,sqlExecuteObject.getPageParam().getPageNow(),sqlExecuteObject.getPageParam().getPageSize());
-    }
 
     /**
      * 获取单条记录
      * @param sqlExecuteObject
      * @return
      */
-    public Map<String, Object> selectOne(SqlExecuteObject sqlExecuteObject){
+    public Map<String, Object> queryOneMap(SqlExecuteObject sqlExecuteObject){
         SelectSqlGenerator generator = new SelectSqlGenerator(sqlExecuteObject);
         return jdbcTemplate.queryForMap(generator.generate());
+    }
+
+    /**
+     * 获取单条记录
+     * @param sqlExecuteObject
+     * @param tClass
+     * @param <T>
+     * @return
+     */
+    public <T> T queryOneObject(SqlExecuteObject sqlExecuteObject,Class<T> tClass){
+        SelectSqlGenerator generator = new SelectSqlGenerator(sqlExecuteObject);
+        return jdbcTemplate.queryForObject(generator.generate(),tClass);
     }
 }

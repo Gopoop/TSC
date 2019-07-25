@@ -17,6 +17,4 @@ import java.util.List;
 public class PageBean<T> {
     private List<T> list;
     private Long total;
-    private Integer pageNow;
-    private Integer pageSize;
 }

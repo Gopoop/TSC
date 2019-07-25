@@ -38,4 +38,6 @@ public class SpiderSaveRequest {
     private PipelineConfig pipelineConfig;
     @ApiModelProperty(notes = "网站配置")
     private SiteConfig siteConfig;
+    @ApiModelProperty(notes = "是否重启")
+    private Boolean restart;
 }
