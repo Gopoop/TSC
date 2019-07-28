@@ -8,6 +8,7 @@ import com.gopoop.bd.tsc.entity.SpiderEntity;
 import com.gopoop.bd.tsc.jdbc.sql.SqlExecuteObject;
 import com.gopoop.bd.tsc.service.JdbcService;
 import com.gopoop.bd.tsc.spider.pageprocess.*;
+import com.gopoop.bd.tsc.spider.pipeline.PipelineConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.*;
@@ -29,7 +30,7 @@ public class SpiderManager {
     /**
      * 爬虫实例缓存
      */
-    private static final Map<Integer, Spider> spiderCache = new ConcurrentHashMap<>();
+    private static final Map<Integer, Spider> spiderPool = new ConcurrentHashMap<>();
 
     @Autowired
     private JdbcService jdbcService;
@@ -38,7 +39,7 @@ public class SpiderManager {
      * 初始化爬虫池
      */
     @PostConstruct
-    public void initPool() {
+    public void init() {
         List<SpiderEntity> spiders = jdbcService.listObject(SqlExecuteObject.builder().tableName("spider").build(),SpiderEntity.class);
         if(CollectionUtil.isNotEmpty(spiders)){
             for (SpiderEntity spider : spiders) {
@@ -63,7 +64,7 @@ public class SpiderManager {
         spider.addUrl(spiderEntity.getUrl());
         spider.test(spiderEntity.getTestUrl());
         spider.setUUID(spiderEntity.getName());
-        spiderCache.put(spiderEntity.getId(),spider);
+        spiderPool.put(spiderEntity.getId(),spider);
         //是否启动
         if(restart){
             this.start(spiderEntity.getId());
@@ -77,7 +78,7 @@ public class SpiderManager {
      * @param spiderId
      */
     public void start(Integer spiderId){
-        Spider spider = spiderCache.get(spiderId);
+        Spider spider = spiderPool.get(spiderId);
         spider.start();
         //TODO 更新启动时间
     }
@@ -87,7 +88,7 @@ public class SpiderManager {
      * @param spiderId
      */
     public void stop(Integer spiderId){
-        Spider spider = spiderCache.get(spiderId);
+        Spider spider = spiderPool.get(spiderId);
         spider.stop();
         //TODO 记录暂停时间  记录爬取的数量等信息
     }
@@ -98,7 +99,7 @@ public class SpiderManager {
      * @return
      */
     public Spider get(Integer spiderId){
-        return spiderCache.get(spiderId);
+        return spiderPool.get(spiderId);
     }
 
     /**
@@ -109,7 +110,7 @@ public class SpiderManager {
         Spider spider = this.get(spiderId);
         if(spider != null && spider.getStatus() == Spider.Status.Running){
             this.stop(spiderId);
-            spiderCache.remove(spiderId);
+            spiderPool.remove(spiderId);
         }
     }
 
@@ -199,7 +200,7 @@ public class SpiderManager {
              */
             private Page initFieldFetchPolicy(List<FetchConfig> fieldFetchConfigs, Page page) {
                 for (FetchConfig config : fieldFetchConfigs) {
-                    page.putField(config.getField(),this.getSelectable(config,page).toString());
+                    page.putField(config.getAttribute(),this.getSelectable(config,page).toString());
                 }
                 return page;
             }

@@ -1,5 +1,6 @@
 package com.gopoop.bd.tsc.common.utils;
 
+import cn.hutool.core.util.StrUtil;
 import com.gopoop.bd.tsc.jdbc.sql.Condition;
 import com.gopoop.bd.tsc.jdbc.sql.PageParam;
 
@@ -59,7 +60,9 @@ public class SqlUtil {
         return UPDATE + tableName + SET ;
     }
 
-    public static final String selectFieldSql(String fieldName,String alias){
+    public static final String selectFieldSql(String fieldName){
+        String alias = StrUtil.toUnderlineCase(fieldName);
+
         return fieldName + AS + alias + StringUtils.COMMA ;
     }
 

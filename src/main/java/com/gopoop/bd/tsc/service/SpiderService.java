@@ -4,7 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.gopoop.bd.tsc.entity.SpiderEntity;
 import com.gopoop.bd.tsc.jdbc.sql.SqlExecuteObject;
-import com.gopoop.bd.tsc.spider.PipelineConfig;
+import com.gopoop.bd.tsc.spider.pipeline.PipelineConfig;
 import com.gopoop.bd.tsc.spider.SiteConfig;
 import com.gopoop.bd.tsc.spider.SpiderManager;
 import com.gopoop.bd.tsc.spider.pageprocess.PageProcessConfig;

@@ -1,7 +1,7 @@
 package com.gopoop.bd.tsc.vo.req;
 
 import com.gopoop.bd.tsc.spider.pageprocess.PageProcessConfig;
-import com.gopoop.bd.tsc.spider.PipelineConfig;
+import com.gopoop.bd.tsc.spider.pipeline.PipelineConfig;
 import com.gopoop.bd.tsc.spider.SiteConfig;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

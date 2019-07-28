@@ -18,5 +18,5 @@ public class FetchConfig {
     @ApiModelProperty(notes = "属性提取配置")
     private List<SelectorConfig> selectorConfigs;
     @ApiModelProperty(notes = "提取属性名，持久化字段名称")
-    private String field;
+    private String attribute;
 }

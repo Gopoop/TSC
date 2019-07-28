@@ -32,8 +32,8 @@ public class SelectSqlGenerator extends AbstractSqlGenerator{
             sql.append("* ");
         }else{
             for (Field field : sqlExecuteObject.getFields()) {
-                if(field.getIsShow()){
-                    sql.append(SqlUtil.selectFieldSql(field.getName(),field.getAlias()));
+                if(field.getShow()){
+                    sql.append(SqlUtil.selectFieldSql(field.getName()));
                 }
             }
         }
