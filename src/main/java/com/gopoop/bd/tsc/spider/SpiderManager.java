@@ -3,12 +3,16 @@ package com.gopoop.bd.tsc.spider;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.gopoop.bd.tsc.common.utils.SqlUtil;
 import com.gopoop.bd.tsc.common.utils.StringUtils;
 import com.gopoop.bd.tsc.entity.SpiderEntity;
 import com.gopoop.bd.tsc.jdbc.sql.SqlExecuteObject;
+import com.gopoop.bd.tsc.jdbc.sql.generator.InsertSqlGenerator;
+import com.gopoop.bd.tsc.jdbc.sql.generator.SqlGenerator;
 import com.gopoop.bd.tsc.service.JdbcService;
 import com.gopoop.bd.tsc.spider.pageprocess.*;
 import com.gopoop.bd.tsc.spider.pipeline.PipelineConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.*;
@@ -25,6 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @date 2019/7/24 15:49
  */
+@Slf4j
 @Component
 public class SpiderManager {
     /**
@@ -253,7 +258,34 @@ public class SpiderManager {
      */
     private Pipeline configurationPipeline(PipelineConfig pipelineConfig) {
         return (ResultItems resultItems, Task task) -> {
-            
+            switch (pipelineConfig.getPersistentWay()){
+                case MYSQL:
+                    this.mysqlPersist(resultItems.getAll(),pipelineConfig);
+                    break;
+                 default:
+                     this.console(resultItems.getAll());
+                     break;
+            }
         };
+    }
+
+    /**
+     * 数据库持久化
+     * @param resultItems
+     * @param pipelineConfig
+     */
+    private void mysqlPersist(Map<String,Object> resultItems, PipelineConfig pipelineConfig) {
+        jdbcService.createTableIfNotExist(SqlExecuteObject.builder().tableName(pipelineConfig.getTableName()).fields(pipelineConfig.getFields()).build());
+        jdbcService.insert(SqlExecuteObject.builder().tableName(pipelineConfig.getTableName()).fieldValueMap(resultItems).build());
+    }
+
+    /**
+     * 控制台输出
+     * @param all
+     */
+    private void console(Map<String, Object> all) {
+        for (Map.Entry<String, Object> entry : all.entrySet()) {
+            log.info("爬取的内容{}",JSONObject.toJSONString(entry));
+        }
     }
 }

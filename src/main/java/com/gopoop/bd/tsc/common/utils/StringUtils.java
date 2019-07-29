@@ -11,6 +11,8 @@ public class StringUtils extends StrUtil {
     public static final String SINGLE_QUOTES = "'";
     public static final String PERCENT = "%";
     public static final String EQUALS = " = ";
+    public static final String OPEN_PARENTHESES = " ( ";
+    public static final String CLOSE_PARENTHESES = " ) ";
 
 
 

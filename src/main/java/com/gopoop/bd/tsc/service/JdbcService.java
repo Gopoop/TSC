@@ -1,10 +1,9 @@
 package com.gopoop.bd.tsc.service;
 
+import com.gopoop.bd.tsc.common.utils.StringUtils;
 import com.gopoop.bd.tsc.jdbc.sql.SqlExecuteObject;
-import com.gopoop.bd.tsc.jdbc.sql.generator.InsertSqlGenerator;
-import com.gopoop.bd.tsc.jdbc.sql.generator.SelectSqlGenerator;
-import com.gopoop.bd.tsc.jdbc.sql.generator.SqlGenerator;
-import com.gopoop.bd.tsc.jdbc.sql.generator.UpdateSqlGenerator;
+import com.gopoop.bd.tsc.jdbc.sql.generator.*;
+import com.gopoop.bd.tsc.spider.pipeline.PipelineConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -113,5 +112,27 @@ public class JdbcService {
     public <T> T queryOneObject(SqlExecuteObject sqlExecuteObject,Class<T> tClass){
         SelectSqlGenerator generator = new SelectSqlGenerator(sqlExecuteObject);
         return jdbcTemplate.queryForObject(generator.generate(),tClass);
+    }
+
+    /**
+     * 检查表是否存在
+     * @param tableName
+     * @return
+     */
+    public boolean checkTableExist(String tableName){
+        String sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='tsc' AND TABLE_NAME= " + StringUtils.surround(tableName,StringUtils.SINGLE_QUOTES);
+        String result = jdbcTemplate.queryForObject(sql,String.class);
+        return StringUtils.isNotEmpty(result);
+    }
+
+    /**
+     * 创建表
+     * @param sqlExecuteObject
+     */
+    public void createTableIfNotExist(SqlExecuteObject sqlExecuteObject) {
+        if(!checkTableExist(sqlExecuteObject.getTableName())){
+            SqlGenerator sqlGenerator = new CreateTableSqlGenerator(sqlExecuteObject);
+            jdbcTemplate.update(sqlGenerator.generate());
+        }
     }
 }

@@ -9,6 +9,7 @@ public class SqlUtil {
     public static final String INSERT_INTO = "insert into ";
     public static final String UPDATE = "update ";
     public static final String SELECT = "select ";
+    public static final String CREATE_TABLE = "create table ";
     public static final String FROM = " from ";
     public static final String COUNT = " count(*) ";
     public static final String SET = " set  ";
@@ -62,7 +63,6 @@ public class SqlUtil {
 
     public static final String selectFieldSql(String fieldName){
         String alias = StrUtil.toUnderlineCase(fieldName);
-
         return fieldName + AS + alias + StringUtils.COMMA ;
     }
 
@@ -72,6 +72,13 @@ public class SqlUtil {
 
     public static String countHeadSql(String tableName) {
         return SELECT + COUNT + FROM + tableName;
+    }
 
+    public static final String createTableHeadSql(String tableName){
+        return CREATE_TABLE + tableName ;
+    }
+
+    public static final String fieldSql(String fieldName,String type , Integer length){
+        return fieldName + StringUtils.SPACE + type  + (length > 0 ? StringUtils.OPEN_PARENTHESES + length + StringUtils.CLOSE_PARENTHESES : StringUtils.EMPTY) + StringUtils.COMMA;
     }
 }

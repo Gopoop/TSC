@@ -91,12 +91,14 @@ public class SqlExecuteObject {
             }else {
                 temp = BeanUtil.beanToMap(object,Boolean.TRUE,Boolean.FALSE);
             }
-            if((int)temp.get(SqlUtil.ID) != 0){
-                temp.put(SqlUtil.UPDATE_TIME, DateUtil.now());
-            }else{
-                temp.put(SqlUtil.CREATE_TIME, DateUtil.now());
+            if(temp.get(SqlUtil.ID) != null){
+                if((int)temp.get(SqlUtil.ID) != 0){
+                    temp.put(SqlUtil.UPDATE_TIME, DateUtil.now());
+                }else{
+                    temp.put(SqlUtil.CREATE_TIME, DateUtil.now());
+                }
             }
-            this.fieldValueMap = new HashMap<>();
+            this.fieldValueMap = new HashMap<>(temp.size() << 1);
             for (Map.Entry<String, Object> stringObjectEntry : temp.entrySet()) {
                 if(stringObjectEntry.getValue() instanceof String){
                     fieldValueMap.put(stringObjectEntry.getKey(), StringUtils.surround(String.valueOf(stringObjectEntry.getValue()),StringUtils.SINGLE_QUOTES));
