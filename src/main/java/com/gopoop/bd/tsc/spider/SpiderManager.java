@@ -3,12 +3,9 @@ package com.gopoop.bd.tsc.spider;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.gopoop.bd.tsc.common.utils.SqlUtil;
 import com.gopoop.bd.tsc.common.utils.StringUtils;
 import com.gopoop.bd.tsc.entity.SpiderEntity;
 import com.gopoop.bd.tsc.jdbc.sql.SqlExecuteObject;
-import com.gopoop.bd.tsc.jdbc.sql.generator.InsertSqlGenerator;
-import com.gopoop.bd.tsc.jdbc.sql.generator.SqlGenerator;
 import com.gopoop.bd.tsc.service.JdbcService;
 import com.gopoop.bd.tsc.spider.pageprocess.*;
 import com.gopoop.bd.tsc.spider.pipeline.PipelineConfig;
@@ -275,7 +272,7 @@ public class SpiderManager {
      * @param pipelineConfig
      */
     private void mysqlPersist(Map<String,Object> resultItems, PipelineConfig pipelineConfig) {
-        jdbcService.createTableIfNotExist(SqlExecuteObject.builder().tableName(pipelineConfig.getTableName()).fields(pipelineConfig.getFields()).build());
+        jdbcService.createTable(SqlExecuteObject.builder().tableName(pipelineConfig.getTableName()).fields(pipelineConfig.getFields()).build(),Boolean.FALSE);
         jdbcService.insert(SqlExecuteObject.builder().tableName(pipelineConfig.getTableName()).fieldValueMap(resultItems).build());
     }
 

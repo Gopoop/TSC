@@ -119,7 +119,7 @@ public class JdbcService {
      * @param tableName
      * @return
      */
-    public boolean checkTableExist(String tableName){
+    private boolean checkTableExist(String tableName){
         String sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='tsc' AND TABLE_NAME= " + StringUtils.surround(tableName,StringUtils.SINGLE_QUOTES);
         String result = jdbcTemplate.queryForObject(sql,String.class);
         return StringUtils.isNotEmpty(result);
@@ -128,9 +128,10 @@ public class JdbcService {
     /**
      * 创建表
      * @param sqlExecuteObject
+     * @param force
      */
-    public void createTableIfNotExist(SqlExecuteObject sqlExecuteObject) {
-        if(!checkTableExist(sqlExecuteObject.getTableName())){
+    public void createTable(SqlExecuteObject sqlExecuteObject, boolean force) {
+        if(force || !checkTableExist(sqlExecuteObject.getTableName())){
             SqlGenerator sqlGenerator = new CreateTableSqlGenerator(sqlExecuteObject);
             jdbcTemplate.update(sqlGenerator.generate());
         }
